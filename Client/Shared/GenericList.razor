@@ -1,0 +1,40 @@
+﻿@typeparam TItem
+
+@if (List == null)
+{
+    if (NullTemplate != null)
+    {
+        @NullTemplate
+    }
+}
+else if (List.Count == 0)
+{
+    if (EmptyTemplate!= null)
+    {
+        @EmptyTemplate
+    }
+}
+else
+{
+    foreach (var element in List)
+    {
+        @ElementTemplate(element)
+    }
+   @* @for (int i = 0; i < Movies.Count; i++)
+    {
+        <SingleMovie movie="Movies[i]" DisplayButtons="displayButtons"
+                     DeleteMovie="DeleteMovie"></SingleMovie>
+    }*@
+}
+
+@code{
+    [Parameter] public List<TItem> List { get; set; }
+    [Parameter] public RenderFragment NullTemplate { get; set; }
+    [Parameter] public RenderFragment EmptyTemplate { get; set; }
+    [Parameter] public RenderFragment<TItem> ElementTemplate { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        await Task.Delay(5000);
+    }
+}

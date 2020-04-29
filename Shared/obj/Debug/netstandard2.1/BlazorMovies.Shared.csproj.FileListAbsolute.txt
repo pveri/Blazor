@@ -1,0 +1,8 @@
+C:\Users\peter\source\repos\BlazorMovies\Shared\bin\Debug\netstandard2.1\BlazorMovies.Shared.deps.json
+C:\Users\peter\source\repos\BlazorMovies\Shared\bin\Debug\netstandard2.1\BlazorMovies.Shared.dll
+C:\Users\peter\source\repos\BlazorMovies\Shared\bin\Debug\netstandard2.1\BlazorMovies.Shared.pdb
+C:\Users\peter\source\repos\BlazorMovies\Shared\obj\Debug\netstandard2.1\BlazorMovies.Shared.csproj.CoreCompileInputs.cache
+C:\Users\peter\source\repos\BlazorMovies\Shared\obj\Debug\netstandard2.1\BlazorMovies.Shared.AssemblyInfoInputs.cache
+C:\Users\peter\source\repos\BlazorMovies\Shared\obj\Debug\netstandard2.1\BlazorMovies.Shared.AssemblyInfo.cs
+C:\Users\peter\source\repos\BlazorMovies\Shared\obj\Debug\netstandard2.1\BlazorMovies.Shared.dll
+C:\Users\peter\source\repos\BlazorMovies\Shared\obj\Debug\netstandard2.1\BlazorMovies.Shared.pdb

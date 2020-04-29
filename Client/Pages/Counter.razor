@@ -1,0 +1,22 @@
+﻿@page "/counter"
+@inject SingletonService singleton
+@inject TransientService transient
+@inject ScopedService scoped
+@inject IJSRuntime js
+<h1>Counter</h1>
+
+<p>Current count: @currentCount</p>
+<p>Singleton Count: @singleton.Value</p>
+<p>Transient Count: @transient.Value</p>
+<p>Scoped Count: @scoped.Value</p>
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+<button class="btn btn-primary" @onclick="JsFunc">Click me JS</button>
+<input type="number" @bind="currentCount" />
+
+@code{
+
+    private async Task JsFunc()
+    {
+        await js.InvokeVoidAsync("dotnetInstanceInvocation", DotNetObjectReference.Create(this));   
+    }
+}

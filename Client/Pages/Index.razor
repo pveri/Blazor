@@ -1,0 +1,19 @@
+﻿@page "/"
+@using BlazorMovies.Shared.StringUtilities
+@inject BlazorMovies.Client.Helpers.Interfaces.IRepository repository
+
+<button @onclick="@(() => Console.WriteLine(StringUtilities.CustomToUpper("I've been clicked!")))"></button>
+<MovieList @ref="movieList" Movies="movies" />
+@code {
+    private MovieList movieList;
+    List<Movie> movies;
+
+    protected async override Task OnInitializedAsync()
+    {
+        //await Task.Delay(5000);
+        movies = repository.GetMovies();
+    }
+
+
+}
+
