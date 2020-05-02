@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\peter\\source\\repos\\BlazorMovies\\Shared\\BlazorMovies.Shared.csproj": {}
+    "C:\\Users\\peter\\source\\repos\\BlazorMoviesFinal\\Shared\\BlazorMovies.Shared.csproj": {}
   },
   "projects": {
-    "C:\\Users\\peter\\source\\repos\\BlazorMovies\\Shared\\BlazorMovies.Shared.csproj": {
+    "C:\\Users\\peter\\source\\repos\\BlazorMoviesFinal\\Shared\\BlazorMovies.Shared.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\peter\\source\\repos\\BlazorMovies\\Shared\\BlazorMovies.Shared.csproj",
+        "projectUniqueName": "C:\\Users\\peter\\source\\repos\\BlazorMoviesFinal\\Shared\\BlazorMovies.Shared.csproj",
         "projectName": "BlazorMovies.Shared",
-        "projectPath": "C:\\Users\\peter\\source\\repos\\BlazorMovies\\Shared\\BlazorMovies.Shared.csproj",
+        "projectPath": "C:\\Users\\peter\\source\\repos\\BlazorMoviesFinal\\Shared\\BlazorMovies.Shared.csproj",
         "packagesPath": "C:\\Users\\peter\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\peter\\source\\repos\\BlazorMovies\\Shared\\obj\\",
+        "outputPath": "C:\\Users\\peter\\source\\repos\\BlazorMoviesFinal\\Shared\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\peter\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -37,6 +37,16 @@
       },
       "frameworks": {
         "netstandard2.1": {
+          "dependencies": {
+            "System.ComponentModel.Annotations": {
+              "target": "Package",
+              "version": "[4.7.0, )"
+            },
+            "Tewr.Blazor.FileReader": {
+              "target": "Package",
+              "version": "[1.5.0.20109, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",

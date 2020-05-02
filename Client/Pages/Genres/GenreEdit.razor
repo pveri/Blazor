@@ -1,0 +1,21 @@
+﻿@page "/genres/edit/{GenreId:int}"
+<h3>GenreEdit</h3>
+
+@if (Genre != null)
+{
+    <GenreForm Genre="Genre" OnValidSubmit="SaveGenre"></GenreForm>
+}
+@code {
+    [Parameter] public int GenreId { get; set; }
+    public Genre Genre { get; set; }
+    protected override void OnInitialized()
+    {
+        Genre = new Genre { Id = GenreId, Name="Comedy" };
+        base.OnInitialized();
+    }
+
+    protected void SaveGenre()
+    {
+        Console.WriteLine($"In Edit: Genre{Genre.Name}, Id{Genre.Id}");
+    }
+}

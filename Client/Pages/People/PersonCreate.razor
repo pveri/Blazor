@@ -1,0 +1,18 @@
+﻿@page "/people/create"
+
+<h3>PersonCreate</h3>
+
+<PersonForm Person="person" OnValidSubmit="Create"></PersonForm>
+
+@code {
+    Person person = new Person();
+    string ImgUrl = null;
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+    protected void Create()
+    {
+        Console.WriteLine("Creating Person");
+    }
+}

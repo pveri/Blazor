@@ -2,48 +2,45 @@
 <h3>MovieList</h3>
 <input type="checkbox" @bind="displayButtons" />
 
-<GenericList List="Movies">
-    <NullTemplate>
-        <text>Loading...</text>
-        <img src="https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/200.gif" />
-    </NullTemplate>
-    <ElementTemplate>
-        <SingleMovie movie="context" DisplayButtons="displayButtons"
-                     DeleteMovie="DeleteMovie"></SingleMovie>
-    </ElementTemplate>
-</GenericList>
-    
+<div class="movies-container">
+    <GenericList List="Movies">
+        <NullTemplate>
+            <text>Loading...</text>
+            <img src="https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/200.gif" />
+        </NullTemplate>
+        <EmptyTemplate>
+            @EmptyTemplate
+        </EmptyTemplate>
+        <ElementTemplate>
+            <SingleMovie movie="context"
+                         DeleteMovie="DeleteMovie"></SingleMovie>
+        </ElementTemplate>
+    </GenericList>
+</div>
+
+
 
 @code{
     [Parameter] public List<Movie> Movies { get; set; }
     [Parameter] public RenderFragment NullTemplate { get; set; }
     [Parameter] public RenderFragment EmptyTemplate { get; set; }
+    Movie currentMovie;
+
     bool displayButtons = false;
 
     private async Task DeleteMovie(Movie movie)
     {
-        //js.
-        // InvokeAsync<bool>("confirm", $"Are you sure you want to delete{movie.Title}?");
+        js.InvokeAsync<bool>("confirm", $"Are you sure you want to delete{movie.Title}?");
+        currentMovie = movie;
         await js.MyFunction();
         if (await js.Confirm($"Are you sure you want to delete{movie.Title}?"))
-        Movies.Remove(movie);
+            Movies.Remove(movie);
     }
 
-    protected override void OnInitialized()
-    {
-        Console.WriteLine("In OnInitialized(): " + Movies.Count.ToString());
-        base.OnInitialized();
-    }
 
-    protected override void OnAfterRender(bool firstRender)
+    void OnCancel()
     {
-        Console.WriteLine("In OnAfterRender(): " + Movies.Count.ToString());
-        base.OnAfterRender(firstRender);
-    }
-
-    protected override void OnParametersSet()
-    {
-        Console.WriteLine("In OnParameterSet(): " + Movies.Count.ToString());
+        currentMovie = null;
     }
 
 }

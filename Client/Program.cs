@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using BlazorMovies.Client.Helpers.Interfaces;
 using BlazorMovies.Client.Helpers;
+using Blazor.FileReader;
 
 namespace BlazorMovies.Client
 {
@@ -27,10 +28,8 @@ namespace BlazorMovies.Client
         private static void ConfigureServices(IServiceCollection services)
         {
             services.AddOptions();
-            services.AddSingleton<SingletonService>();
-            services.AddTransient<TransientService>();
-            services.AddScoped<ScopedService>();
             services.AddTransient<IRepository, RepositoryInMemory>();
+            services.AddFileReaderService(options => options.InitializeOnFirstCall = true);
         }
     }
 }
