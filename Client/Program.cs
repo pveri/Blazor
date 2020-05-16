@@ -10,6 +10,8 @@ using Microsoft.Extensions.Logging;
 using BlazorMovies.Client.Helpers.Interfaces;
 using BlazorMovies.Client.Helpers;
 using Blazor.FileReader;
+using BlazorMovies.Client.Helpers.Services;
+using BlazorMovies.Client.Helpers.Repository;
 
 namespace BlazorMovies.Client
 {
@@ -30,6 +32,9 @@ namespace BlazorMovies.Client
             services.AddOptions();
             services.AddTransient<IRepository, RepositoryInMemory>();
             services.AddFileReaderService(options => options.InitializeOnFirstCall = true);
+            services.AddScoped<IHttpService, HttpService>();
+            services.AddScoped<IGenreRepository, GenreRepository>();
+            services.AddScoped<IPersonRepository, PersonRepository>();
         }
     }
 }
