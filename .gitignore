@@ -2,3 +2,5 @@ Server/obj
 Client/obj
 Server/bin
 Client/bin/*
+*obj/
+*/bin/*

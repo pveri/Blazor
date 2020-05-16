@@ -4,3 +4,4 @@ Server/bin
 Client/bin/*
 *.suo
 *.user
+*/obj
