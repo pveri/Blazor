@@ -5,6 +5,12 @@
 
 <MovieList @ref="movieList" Movies="movies" />
 
+<TypeAhead SearchMethod="SearchMethod">
+    <ResultTemplate>
+        @context
+    </ResultTemplate>
+</TypeAhead>
+
 @code {
     private MovieList movieList;
     List<Movie> movies;
@@ -15,6 +21,12 @@
         movies = repository.GetMovies();
     }
 
+    private async Task<IEnumerable<string>> SearchMethod(string txt)
+    {
+        await Task.Delay(2000);
+        if (txt == "test") return Enumerable.Empty<string>();
+        return new List<string>() { "Item One", "Item Two" };
+    }
 
 }
 

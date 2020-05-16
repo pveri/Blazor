@@ -1,16 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace BlazorMovies.Shared.Entities
 {
     public class Movie
     {
-        public int Id { get; set; } = 1;
+        public int Id { get; set; } 
+        [Required]
         public string Title { get; set; }
-        public DateTime ReleaseDate { get; set; }
+        public string Summary { get; set; }
+        public string Trailer { get; set; }
+        public bool InTheatres { get; set; }
+        [Required]
+        public DateTime? ReleaseDate { get; set; }
         public String Poster { get; set; }
 
+        // This doesn't work in EF CORE
+        //public ICollection<Genre> Genres { get; set; }
         public string TitleBrief
         {
             get

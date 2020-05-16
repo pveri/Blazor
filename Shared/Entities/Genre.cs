@@ -10,5 +10,7 @@ namespace BlazorMovies.Shared.Entities
         public int Id { get; set; }
         [Required]
         public string Name { get; set; }
+        // This doesn't work in EF CORE
+        public ICollection<Movie> Movies { get; set; }
     }
 }

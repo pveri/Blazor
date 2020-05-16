@@ -1,0 +1,28 @@
+﻿@inherits InputTextArea
+@using System.Linq.Expressions
+@typeparam TValue  
+<div>
+    <label>@Label</label>
+    <div>
+        <textarea @bind-Value="CurrentValue" @bind-Value:event="oninput" @onkeyup="@((KeyboardEventArgs e) => MarkdownKeyPress(e))"></textarea>
+        <ValidationMessage For="For"/>
+    </div>
+</div>
+<div>
+    <label>@Label (preview):</label>
+    <div class="markdown-container">
+        <RenderMarkdown @ref="mdArea" MarkdownContent="@CurrentValue"></RenderMarkdown>
+    </div>
+</div>
+@code {
+    [Parameter]public string Label { get; set; }
+    [Parameter]public Expression<Func<TValue>> For { get; set; }
+    private RenderMarkdown mdArea;
+
+    protected void MarkdownKeyPress(KeyboardEventArgs e)
+    {
+        Console.WriteLine(CurrentValue);
+        mdArea.MarkdownContent = CurrentValue;
+        StateHasChanged();
+    }
+}

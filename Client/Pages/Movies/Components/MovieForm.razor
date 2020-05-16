@@ -1,0 +1,85 @@
+﻿
+<EditForm Model="movie" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+    <div class="form-group">
+        <label for="name">Name</label>
+        <div class="form-group">
+            <InputText class="form-control" @bind-Value="movie.Title"></InputText>
+            <ValidationMessage For="@(() => movie.Title)" />
+        </div>
+        <div class="form-group">
+            <label for="intheatres">In Theatres?</label>
+            <InputCheckbox class="form-control" @bind-Value="movie.InTheatres"></InputCheckbox>
+        </div>
+        <div class="form-group">
+            <InputText class="form-control" @bind-Value="movie.Trailer"></InputText>
+            <ValidationMessage For="@(() => movie.Trailer)" />
+        </div>
+
+        <div class="form-group">
+            <InputDate class="form-control" @bind-Value="movie.ReleaseDate"></InputDate>
+            <ValidationMessage For="@(() => movie.ReleaseDate)" />
+        </div>
+
+        <div class="form-markdown">
+            <InputMarkdown @bind-Value="movie.Summary" For="@(()=> movie.Summary)" Label="@("Summary")" />
+        </div>
+        <button class="btn btn-primary" type="submit" @onclick="OnValidSubmit">Submit</button>
+
+        <div>
+            <MultiSelect Selected="selected" UnSelected="unselected"></MultiSelect>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Actors:</label>
+        <div>
+            <MultiSelectTypeAhead SearchMethod="SearchMethod" SelectedElements="SelectedActors" Context="actor" >
+                <MyResultTemplate>
+                    <img style="width:50px;" src="@actor.Picture" />
+                </MyResultTemplate>
+                <MyListTemplate>
+                    @actor.Name
+                </MyListTemplate>
+            </MultiSelectTypeAhead>
+        </div>
+    </div>
+</EditForm>
+<ImageUpload Label="@("Picture")" ImgUrl="@ImgUrl" OnSelectedImage="ImageSelected"></ImageUpload>
+@code {
+    [Parameter] public Movie movie { get; set; }
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+    [Parameter] public List<Genre> Selected { get; set; }
+    [Parameter] public List<Genre> Unselected { get; set; }
+    [Parameter] public List<Person> SelectedActors { get; set; } = new List<Person>();
+
+
+    private List<MultiSelectModel> selected = new List<MultiSelectModel>();
+    private List<MultiSelectModel> unselected = new List<MultiSelectModel>();
+
+    string ImgUrl;
+
+    protected override void OnInitialized()
+    {
+        selected = Selected.Select(x => new MultiSelectModel(x.Id.ToString(), x.Name)).ToList();
+        unselected = Unselected.Select(x => new MultiSelectModel(x.Id.ToString(), x.Name)).ToList();
+
+        if (!string.IsNullOrEmpty(movie.Poster))
+        {
+            ImgUrl = movie.Poster;
+            movie.Poster = null;
+        }
+        base.OnInitialized();
+    }
+
+    protected void ImageSelected(string base64)
+    {
+        movie.Poster = base64;
+    }
+
+    private async Task<IEnumerable<Person>> SearchMethod(string SearchTxt)
+    {
+        return new List<Person>() { new Person {Id=1, FirstName="Tom", LastName="Hanks", Picture="https://www.gstatic.com/tv/thumb/persons/62982/62982_v9_bb.jpg" },
+             new Person { Id = 2, FirstName = "Tom", LastName = "Hardy", Picture = "https://upload.wikimedia.org/wikipedia/commons/4/43/Tom_Hardy_by_Gage_Skidmore.jpg" } };
+    }
+}
