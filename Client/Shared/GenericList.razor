@@ -16,9 +16,16 @@ else if (List.Count == 0)
 }
 else
 {
-    foreach (var element in List)
+    if (ElementTemplate != null)
     {
+        foreach (var element in List)
+        {
         @ElementTemplate(element)
+        }
+    }
+    else
+    {
+        @WholeListTemplate
     }
    @* @for (int i = 0; i < Movies.Count; i++)
     {
@@ -32,6 +39,7 @@ else
     [Parameter] public RenderFragment NullTemplate { get; set; }
     [Parameter] public RenderFragment EmptyTemplate { get; set; }
     [Parameter] public RenderFragment<TItem> ElementTemplate { get; set; }
+    [Parameter] public RenderFragment WholeListTemplate { get; set; }
 
     protected async override Task OnInitializedAsync()
     {

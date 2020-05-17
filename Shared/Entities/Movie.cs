@@ -17,8 +17,10 @@ namespace BlazorMovies.Shared.Entities
         public DateTime? ReleaseDate { get; set; }
         public String Poster { get; set; }
 
+        public ICollection<MoviesGenre> MoviesGenres { get; set; } = new List<MoviesGenre>();
         // This doesn't work in EF CORE
         //public ICollection<Genre> Genres { get; set; }
+        public ICollection<Actor> Actors { get; set; } = new List<Actor>();
         public string TitleBrief
         {
             get

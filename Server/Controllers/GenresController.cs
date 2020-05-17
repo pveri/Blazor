@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BlazorMovies.Client.Pages.Genres;
 using BlazorMovies.Shared.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BlazorMovies.Server.Controllers
 {
@@ -23,6 +25,13 @@ namespace BlazorMovies.Server.Controllers
             context.Genres.Add(genre);
             await context.SaveChangesAsync();
             return Ok();
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> Get()
+        {
+            var genres = await context.Genres.ToListAsync();
+            return Ok(genres);
         }
     }
 }

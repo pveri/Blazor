@@ -1,5 +1,8 @@
 ﻿@page "/movies/create" 
 @inject NavigationManager navigationManager
+@inject IMovieRepository movieRepository
+@using Newtonsoft.Json
+
 <h3>CreateMovie</h3>
 
 <MovieForm movie="movie" Unselected="Genres" Selected="new List<Genre>()" OnValidSubmit="SaveMovie"></MovieForm>
@@ -17,6 +20,8 @@
 
     private void SaveMovie()
     {
+        //Console.Write(JsonConvert.SerializeObject(movie));
+        movieRepository.CreateMovie(movie);
         Console.WriteLine("Saved movie!");
     }
 

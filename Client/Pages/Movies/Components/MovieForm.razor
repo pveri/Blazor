@@ -1,5 +1,5 @@
 ﻿
-<EditForm Model="movie" OnValidSubmit="OnValidSubmit">
+<EditForm Model="movie" OnValidSubmit="OnDataAnnotationsValidated">
     <DataAnnotationsValidator />
     <div class="form-group">
         <label for="name">Name</label>
@@ -34,12 +34,12 @@
     <div class="form-group">
         <label>Actors:</label>
         <div>
-            <MultiSelectTypeAhead SearchMethod="SearchMethod" SelectedElements="SelectedActors" Context="actor" >
+            <MultiSelectTypeAhead SearchMethod="SearchMethod" SelectedElements="SelectedActors" Context="actor">
                 <MyResultTemplate>
                     <img style="width:50px;" src="@actor.Picture" />
                 </MyResultTemplate>
                 <MyListTemplate>
-                    @actor.Name
+                    @actor.Name / <input type="text" placeholder="Character" @bind="actor.Character"/>
                 </MyListTemplate>
             </MultiSelectTypeAhead>
         </div>
@@ -70,6 +70,14 @@
             movie.Poster = null;
         }
         base.OnInitialized();
+    }
+
+    private async void OnDataAnnotationsValidated()
+    {
+        movie.MoviesGenres = Selected.Select(x => new MoviesGenre { GenreId = x.Id, Movie = movie }).ToList();
+        // Console.Write("genres: " + Newtonsoft.Json.JsonConvert.SerializeObject(selected.Select(x => new MoviesGenre { GenreId = int.Parse(x.Key), Movie = movie }).ToList()));
+        movie.Actors = SelectedActors.Select(x => new Actor { CharacterName = x.Character, Person = x, Movie = movie }).ToList();
+        await OnValidSubmit.InvokeAsync(null);
     }
 
     protected void ImageSelected(string base64)

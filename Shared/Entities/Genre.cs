@@ -11,6 +11,7 @@ namespace BlazorMovies.Shared.Entities
         [Required]
         public string Name { get; set; }
         // This doesn't work in EF CORE
-        public ICollection<Movie> Movies { get; set; }
+        //public ICollection<Movie> Movies { get; set; }
+        public ICollection<MoviesGenre> MoviesGenres { get; set; } = new List<MoviesGenre>();
     }
 }

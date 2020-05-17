@@ -1,7 +1,27 @@
 ﻿@page "/genres"
-
+@inject IGenreRepository genreRepo
 <h3>Genres</h3>
 <a class="btn btn-info" href="/genres/create">Add New</a>
+<GenericList List="genres">
+    <WholeListTemplate>
+        @foreach (var g in genres)
+        {
+            <p>@g.Id/@g.Name</p>
+        }
+    </WholeListTemplate>
+</GenericList>
 @code {
+    List<Genre> genres;
 
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            genres = await genreRepo.GetGenres();
+        }
+        catch(Exception e)
+        {
+
+        }
+    }
 }
