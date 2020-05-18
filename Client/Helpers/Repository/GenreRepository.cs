@@ -33,5 +33,24 @@ namespace BlazorMovies.Client.Helpers.Repository
             }
             return response.Response;
         }
+
+        public async Task<Genre> GetGenre(int id)
+        {
+            var response = await httpService.Get<Genre>($"{url}/{id}");
+            if (!response.Success)
+            {
+                throw new ApplicationException(await response.GetBody());
+            }
+            return response.Response;
+        }
+
+        public async Task UpdateGenre(Genre genre)
+        {
+            var response = await httpService.Put(url, genre);
+            if (!response.Success)
+            {
+                throw new ApplicationException(await response.GetBody());
+            }
+        }
     }
 }

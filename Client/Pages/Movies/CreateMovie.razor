@@ -1,27 +1,35 @@
-﻿@page "/movies/create" 
+﻿@page "/movies/create"
 @inject NavigationManager navigationManager
 @inject IMovieRepository movieRepository
+@inject IGenreRepository genreRepo
 @using Newtonsoft.Json
 
 <h3>CreateMovie</h3>
-
-<MovieForm movie="movie" Unselected="Genres" Selected="new List<Genre>()" OnValidSubmit="SaveMovie"></MovieForm>
+@if (Genres == null)
+{
+    <text>Loading...</text>
+}
+else
+{
+   <MovieForm movie="movie" Unselected="Genres" Selected="new List<Genre>()" OnValidSubmit="SaveMovie"></MovieForm>
+}
 
 @code {
-
+    private int count = 0;
     private Movie movie = new Movie();
 
-    private List<Genre> Genres = new List<Genre>()
-    {
-        new Genre{Id=1, Name="Comedy"},
-        new Genre{Id = 2, Name="Drama"},
-        new Genre{Id=3, Name="Foreign"}
-    };
+    private List<Genre> Genres;
 
-    private void SaveMovie()
+    protected override async Task OnInitializedAsync()
+    {
+        Genres = await genreRepo.GetGenres();
+    }
+
+    private async void SaveMovie()
     {
         //Console.Write(JsonConvert.SerializeObject(movie));
-        movieRepository.CreateMovie(movie);
+        Console.Write($"called save {++count} times");
+        await movieRepository.CreateMovie(movie);
         Console.WriteLine("Saved movie!");
     }
 

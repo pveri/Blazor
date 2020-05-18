@@ -1,4 +1,4 @@
-﻿
+﻿@inject IPersonRepository personRepo
 <EditForm Model="movie" OnValidSubmit="OnDataAnnotationsValidated">
     <DataAnnotationsValidator />
     <div class="form-group">
@@ -24,7 +24,7 @@
         <div class="form-markdown">
             <InputMarkdown @bind-Value="movie.Summary" For="@(()=> movie.Summary)" Label="@("Summary")" />
         </div>
-        <button class="btn btn-primary" type="submit" @onclick="OnValidSubmit">Submit</button>
+        <button class="btn btn-primary" type="submit">Submit</button>
 
         <div>
             <MultiSelect Selected="selected" UnSelected="unselected"></MultiSelect>
@@ -56,7 +56,7 @@
 
     private List<MultiSelectModel> selected = new List<MultiSelectModel>();
     private List<MultiSelectModel> unselected = new List<MultiSelectModel>();
-
+    private bool isBusy = false;
     string ImgUrl;
 
     protected override void OnInitialized()
@@ -74,10 +74,15 @@
 
     private async void OnDataAnnotationsValidated()
     {
-        movie.MoviesGenres = Selected.Select(x => new MoviesGenre { GenreId = x.Id, Movie = movie }).ToList();
-        // Console.Write("genres: " + Newtonsoft.Json.JsonConvert.SerializeObject(selected.Select(x => new MoviesGenre { GenreId = int.Parse(x.Key), Movie = movie }).ToList()));
-        movie.Actors = SelectedActors.Select(x => new Actor { CharacterName = x.Character, Person = x, Movie = movie }).ToList();
+        movie.MoviesGenres = selected.Select(x => new MoviesGenre { GenreId = int.Parse(x.Key), MovieId = movie.Id }).ToList();
+        Console.Write("genres: " + Newtonsoft.Json.JsonConvert.SerializeObject(movie.MoviesGenres));
+        movie.Actors = SelectedActors.Select(x => new Actor { CharacterName = x.Character, PersonId = x.Id, MovieId = movie.Id }).ToList();
+        //if (!isBusy)
+       // {
+            //isBusy = true;
         await OnValidSubmit.InvokeAsync(null);
+           // isBusy = false;
+      // }
     }
 
     protected void ImageSelected(string base64)
@@ -87,7 +92,6 @@
 
     private async Task<IEnumerable<Person>> SearchMethod(string SearchTxt)
     {
-        return new List<Person>() { new Person {Id=1, FirstName="Tom", LastName="Hanks", Picture="https://www.gstatic.com/tv/thumb/persons/62982/62982_v9_bb.jpg" },
-             new Person { Id = 2, FirstName = "Tom", LastName = "Hardy", Picture = "https://upload.wikimedia.org/wikipedia/commons/4/43/Tom_Hardy_by_Gage_Skidmore.jpg" } };
+        return await personRepo.GetPeopleByName(SearchTxt);
     }
 }

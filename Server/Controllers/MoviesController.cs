@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BlazorMovies.Server.Helpers;
+using BlazorMovies.Shared.DTO;
 using BlazorMovies.Shared.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
 
 namespace BlazorMovies.Server.Controllers
@@ -39,8 +41,22 @@ namespace BlazorMovies.Server.Controllers
         [HttpGet]
         public async Task<ActionResult> Get()
         {
-            var movies = await dbContext.MovieGenres.ToListAsync();
+            var movies = await dbContext.Movies.ToListAsync();
             return Ok(movies);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<MovieDTO>> Get(int Id)
+        {
+            var movie = await dbContext.Movies.Where(x => x.Id == Id)
+                .Include(x => x.MoviesGenres).ThenInclude(x => x.Genre)
+                .Include(x => x.Actors).ThenInclude(x => x.Person)
+                .FirstOrDefaultAsync();
+
+            var movieDto = new MovieDTO(movie);
+            movieDto.Actors = movie.Actors.Select(x => new PersonDTO(x.Person) { Character = x.CharacterName }).ToList();
+            movieDto.Genres = movie.MoviesGenres.Select(x => new GenreDTO(x.Genre)).ToList();
+            return movieDto;
         }
     }
 }

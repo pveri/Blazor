@@ -44,7 +44,7 @@ namespace BlazorMovies.Shared.Entities
         {
             get
             {
-                return Title.Replace(" ", "-");
+                return Title?.Replace(" ", "-");
             }
         }
     }

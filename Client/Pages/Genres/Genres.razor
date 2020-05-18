@@ -4,10 +4,29 @@
 <a class="btn btn-info" href="/genres/create">Add New</a>
 <GenericList List="genres">
     <WholeListTemplate>
-        @foreach (var g in genres)
-        {
-            <p>@g.Id/@g.Name</p>
-        }
+        <table>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var g in genres)
+                {
+                    <tr>
+                        <td>
+                            <a class="btn btn-success" href="/genres/edit/@g.Id">Edit</a>
+                        </td>
+                        <td>
+                            <p>@g.Id/@g.Name</p>
+                        </td>
+                    </tr>
+                    
+                }
+            </tbody>
+        </table>
+       
     </WholeListTemplate>
 </GenericList>
 @code {

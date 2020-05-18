@@ -9,6 +9,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Blazor.FileReader;
 using BlazorMovies.Server.Helpers;
+using AutoMapper;
 
 namespace BlazorMovies.Server
 {
@@ -30,6 +31,8 @@ namespace BlazorMovies.Server
             services.AddControllersWithViews();
             services.AddRazorPages();
             services.AddScoped<IFileStorageService, AzureStorageService>();
+            services.AddMvc().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+            services.AddAutoMapper(typeof(Startup));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -17,6 +17,7 @@ namespace BlazorMovies.Client.Helpers.Services
 
         public async Task<HttpResponseWrapper<T>> Get<T>(string url)
         {
+            //Console.WriteLine($"Url is: {url}");
             var response = await httpClient.GetAsync(url);
 
             if (response.IsSuccessStatusCode)
@@ -32,6 +33,14 @@ namespace BlazorMovies.Client.Helpers.Services
             var json = JsonConvert.SerializeObject(data);
             var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
             var response = await httpClient.PostAsync(url, content);
+            return new HttpResponseWrapper<object>(null, response.IsSuccessStatusCode, response);
+        }
+
+        public async Task<HttpResponseWrapper<object>> Put<T>(string url, T data)
+        {
+            var json = JsonConvert.SerializeObject(data);
+            var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+            var response = await httpClient.PutAsync(url, content);
             return new HttpResponseWrapper<object>(null, response.IsSuccessStatusCode, response);
         }
 

@@ -22,7 +22,7 @@
         <div class="form-markdown">
             <InputMarkdown @bind-Value="Person.Biography" For="@(()=> Person.Biography)" Label="@("Biography")"/>
         </div>
-        <button class="btn btn-primary" type="submit" @onclick="OnValidSubmit">Submit</button>
+        <button class="btn btn-primary" type="submit">Submit</button>
     </div>
 </EditForm>
 <ImageUpload Label="@("Picture")" ImgUrl="@ImgUrl" OnSelectedImage="ImageSelected"></ImageUpload>

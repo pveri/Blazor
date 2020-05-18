@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using BlazorMovies.Server.Helpers;
 using BlazorMovies.Shared.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -17,10 +19,12 @@ namespace BlazorMovies.Server.Controllers
     {
         readonly MoviesDbContext dbContext;
         readonly IFileStorageService fileService;
-        public PeopleController(MoviesDbContext dbContext, IFileStorageService fileService)
+        readonly IMapper mapper;
+        public PeopleController(MoviesDbContext dbContext, IFileStorageService fileService, IMapper mapper)
         {
             this.dbContext = dbContext;
             this.fileService = fileService;
+            this.mapper = mapper;
         }
         // GET: api/<controller>
         //[HttpGet]
@@ -28,7 +32,18 @@ namespace BlazorMovies.Server.Controllers
         //{
         //    return new string[] { "value1", "value2" };
         //}
-
+        [HttpGet("search/{searchText}")]
+        public async Task<ActionResult> FilterByName(string searchText)
+        {
+            if (string.IsNullOrEmpty(searchText))
+            {
+                return Ok(new List<Person>());
+            }
+            var result = await dbContext.People.Where(x => x.FirstName.Contains(searchText))
+                .Take(5)
+                .ToListAsync();
+            return Ok(result);
+        }
         [HttpPost]
         public async Task<ActionResult> Post (Person person)
         {
@@ -49,12 +64,34 @@ namespace BlazorMovies.Server.Controllers
             return Ok(people);
         }
 
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Person>> Get(int id)
+        {
+            var person = await dbContext.People.FirstOrDefaultAsync(x => x.Id == id);
+            return person;
+        }
         // POST api/<controller>
         //[HttpPost]
-       // public void Post([FromBody]string value)
-       // {
-       // }
+        // public void Post([FromBody]string value)
+        // {
+        // }
+        [HttpPut]
+        public async Task<ActionResult> Put(Person person)
+        {
+            var dbPerson =await dbContext.People.FirstOrDefaultAsync(x => x.Id == person.Id);
+            dbPerson = mapper.Map(person, dbPerson);
 
+            if (!string.IsNullOrEmpty(person.Picture))
+            {
+                // TODO
+                // Big no-no for me! Will keep it like this for now to finish course, but will move out of controller later
+                var newPic = await fileService.EditFile(Convert.FromBase64String(person.Picture), ".jpg", "people", dbPerson.Picture);
+                dbPerson.Picture = newPic;
+            }
+
+            await dbContext.SaveChangesAsync();
+            return NoContent();
+        }
         // PUT api/<controller>/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody]string value)

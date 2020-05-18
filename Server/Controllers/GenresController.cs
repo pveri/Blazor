@@ -6,6 +6,7 @@ using BlazorMovies.Client.Pages.Genres;
 using BlazorMovies.Shared.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace BlazorMovies.Server.Controllers
 {
@@ -32,6 +33,22 @@ namespace BlazorMovies.Server.Controllers
         {
             var genres = await context.Genres.ToListAsync();
             return Ok(genres);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Genre>> Get(int id)
+        {
+            var genres = await context.Genres.FirstOrDefaultAsync(x => x.Id == id);
+            return Ok(genres);
+        }
+
+        [HttpPut]
+        public async Task<ActionResult> Put(Genre genre)
+        {
+            // context.Genres.Update(genre);
+            context.Attach(genre).State = EntityState.Modified;
+            await context.SaveChangesAsync();
+            return NoContent();
         }
     }
 }
