@@ -7,7 +7,7 @@ using BlazorMovies.Client.Helpers.Interfaces;
 using Newtonsoft.Json;
 namespace BlazorMovies.Client.Helpers.Services
 {
-    public class HttpService: IHttpService
+    public class HttpService : IHttpService
     {
         private readonly HttpClient httpClient;
         public HttpService(HttpClient client)
@@ -22,9 +22,18 @@ namespace BlazorMovies.Client.Helpers.Services
 
             if (response.IsSuccessStatusCode)
             {
-                var responseStr = await response.Content.ReadAsStringAsync();
-                var result = DeserializeResponse<T>(responseStr);
-                return new HttpResponseWrapper<T>(result, true, response);
+                
+                    var responseStr = await response.Content.ReadAsStringAsync();
+                 try
+                {  
+                    var result = DeserializeResponse<T>(responseStr);
+                    return new HttpResponseWrapper<T>(result, true, response);
+                }
+                catch (Exception e)
+                {
+                    Console.Write("Response: " +responseStr);
+                    Console.Write(e.ToString());
+                }
             }
             return new HttpResponseWrapper<T>(default, false, response);
         }
@@ -56,6 +65,13 @@ namespace BlazorMovies.Client.Helpers.Services
                 return new HttpResponseWrapper<TResponse>(toReturn, true, response);
             }
             return new HttpResponseWrapper<TResponse>(default, false, response);
+        }
+
+        public async Task<HttpResponseWrapper<object>> Delete(string url)
+        {
+            var response = await httpClient.DeleteAsync(url);
+            return new HttpResponseWrapper<object>(null, response.IsSuccessStatusCode, response);
+
         }
 
         private T DeserializeResponse<T>(string str) => Newtonsoft.Json.JsonConvert.DeserializeObject<T>(str);

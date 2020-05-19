@@ -1,4 +1,5 @@
 ﻿@inject IJSRuntime js
+@inject IMovieRepository movieRepo
 <h3>MovieList</h3>
 <input type="checkbox" @bind="displayButtons" />
 
@@ -30,11 +31,14 @@
 
     private async Task DeleteMovie(Movie movie)
     {
-        js.InvokeAsync<bool>("confirm", $"Are you sure you want to delete{movie.Title}?");
+        // await js.InvokeAsync<bool>("confirm", $"Are you sure you want to delete{movie.Title}?");
         currentMovie = movie;
-        await js.MyFunction();
-        if (await js.Confirm($"Are you sure you want to delete{movie.Title}?"))
-            Movies.Remove(movie);
+        // await js.MyFunction();
+        if (await js.Confirm($"Are you sure you want to delete {movie.Title}?"))
+            await movieRepo.DeleteMovie(currentMovie.Id);
+
+        Movies = await movieRepo.GetMovies();
+        //Movies.Remove(movie);
     }
 
 

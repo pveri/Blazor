@@ -13,5 +13,6 @@ namespace BlazorMovies.Client.Helpers.Interfaces
         public Task<List<Genre>> GetGenres();
         public Task<Genre> GetGenre(int id);
         public Task UpdateGenre(Genre genre);
+        public Task DeleteGenre(int Id);
     }
 }

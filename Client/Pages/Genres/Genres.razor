@@ -17,6 +17,7 @@
                     <tr>
                         <td>
                             <a class="btn btn-success" href="/genres/edit/@g.Id">Edit</a>
+                            <button class="btn btn-danger" @onclick="@(() => Delete(g.Id))">Delete</button>
                         </td>
                         <td>
                             <p>@g.Id/@g.Name</p>
@@ -42,5 +43,11 @@
         {
 
         }
+    }
+
+    protected async Task Delete(int Id)
+    {
+        await genreRepo.DeleteGenre(Id);
+        genres = await genreRepo.GetGenres();
     }
 }

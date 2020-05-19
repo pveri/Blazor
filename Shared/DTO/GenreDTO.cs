@@ -9,7 +9,6 @@ namespace BlazorMovies.Shared.DTO
     {
         public GenreDTO()
         {
-           
         }
         public GenreDTO(Genre genre)
         {
@@ -18,5 +17,10 @@ namespace BlazorMovies.Shared.DTO
         }
         public int Id { get; set; }
         public string Name { get; set; }
+
+        public Genre Genre ()
+        {
+            return new Genre { Id = this.Id, Name = this.Name };
+        }
     }
 }

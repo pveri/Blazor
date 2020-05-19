@@ -6,7 +6,7 @@
     <a href="@MovieUrl">
         <p>@movie.TitleBrief</p>
     </a>
-    <a class="btn btn-info">Edit Movie</a>
+    <a class="btn btn-info" href="/movies/edit/@movie.Id">Edit Movie</a>
     <button type="button" class="btn btn-danger" @onclick="@(() => DeleteMovie.InvokeAsync(movie))">Delete Movie</button>
 </div>
 

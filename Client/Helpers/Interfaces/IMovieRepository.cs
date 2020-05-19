@@ -13,5 +13,8 @@ namespace BlazorMovies.Client.Helpers.Interfaces
         Task<T> Get<T>(string url);
         Task<MovieDTO> GetMovieDTO(int id);
         public Task<List<Movie>> GetMovies();
+        public Task<MovieUpdateDTO> GetMovieForUpdate(int id);
+        public Task UpdateMovie(Movie movie);
+        public Task DeleteMovie(int Id);
     }
 }

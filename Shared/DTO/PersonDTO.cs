@@ -32,5 +32,17 @@ namespace BlazorMovies.Shared.DTO
         public string Picture { get; set; }
         public DateTime? BirthDate { get; set; }
         public string Character { get; set; }
+        public Person Person()
+        {
+            return new Person
+            {
+                Id = this.Id,
+                LastName = this.LastName,
+                FirstName = this.FirstName,
+                Biography = this.Biography,
+                Picture = this.Picture,
+                BirthDate = this.BirthDate
+            };
+        }
     }
 }

@@ -1,21 +1,26 @@
 ﻿@page "/movies/edit/{MovieId:int}"
+@inject IMovieRepository movieRepo
 
 @if (movie != null)
 {
-<MovieForm movie="movie" OnValidSubmit="SaveMovie"></MovieForm>
+<MovieForm movie="movie" OnValidSubmit="SaveMovie" Unselected="model.NotSelectedGenres.Select(x=>x.Genre()).ToList()" Selected="model.Genres.Select(x=>x.Genre()).ToList()"
+           SelectedActors="model.Actors.Select(x=>x.Person()).ToList()">
+
+</MovieForm>
 }
 @code {
     [Parameter] public int MovieId { get; set; }
     private Movie movie;
-
-    protected override void OnInitialized()
+    private MovieUpdateDTO model;
+    protected async override Task OnInitializedAsync()
     {
-        movie = new Movie { Id = 3 };
+        model = await movieRepo.GetMovieForUpdate(MovieId);
+        movie = model.Movie();
         base.OnInitialized();
     }
 
-    protected void SaveMovie()
+    protected async Task SaveMovie()
     {
-        Console.WriteLine("Saved movie in Edit");
+        await movieRepo.UpdateMovie(movie);
     }
 }
