@@ -16,5 +16,6 @@ namespace BlazorMovies.Client.Helpers.Interfaces
         public Task<MovieUpdateDTO> GetMovieForUpdate(int id);
         public Task UpdateMovie(Movie movie);
         public Task DeleteMovie(int Id);
+        Task<PaginatedResponse<List<Movie>>> Filter(MovieFilterDTO filterDTO);
     }
 }

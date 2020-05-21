@@ -112,5 +112,37 @@ namespace BlazorMovies.Server.Controllers
             await dbContext.SaveChangesAsync();
             return Ok();
         }
+
+        [HttpPost("filter")]
+        public async Task<ActionResult<List<Movie>>> Filter(MovieFilterDTO dto)
+        {
+            // TODO: Move to Manager Method
+            var movieList = dbContext.Movies.AsQueryable();
+
+            if (dto.GenreId > 0)
+            {
+                movieList = movieList.Where(x => x.MoviesGenres.Select(y => y.GenreId).Contains(dto.GenreId));
+            }
+            if (!string.IsNullOrWhiteSpace(dto.Title))
+            {
+                movieList = movieList.Where(x => x.Title.Contains(dto.Title));
+            }
+            if (dto.UpComingRelease)
+            {
+                var today = DateTime.Now;
+                movieList = movieList.Where(x => x.ReleaseDate > today);
+            }
+            if (dto.InTheatres)
+            {
+                movieList = movieList.Where(x => x.InTheatres == true);
+            }
+
+            await HttpContext.AddPagesResponse(movieList, dto.RecordPerPage);
+
+            
+            var movies = await movieList.Paginate(dto.PaginationDto).ToListAsync();
+
+            return movies;
+        }
     }
 }
