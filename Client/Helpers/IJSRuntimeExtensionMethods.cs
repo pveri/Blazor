@@ -18,5 +18,14 @@ namespace BlazorMovies.Client.Helpers
             await Task.Delay(5000);
             await jsRuntime.InvokeVoidAsync("testme");
         }
+
+        public static ValueTask<T> GetAsync<T>(IJSRuntime jsRuntime, string key)
+            => jsRuntime.InvokeAsync<T>("localStorage.getItem", key);
+
+        public static ValueTask SetAsync(IJSRuntime jsRuntime, string key, object value)
+            => jsRuntime.InvokeVoidAsync("localStorage.setItem", key, value);
+
+        public static ValueTask DeleteAsync(IJSRuntime jsRuntime, string key)
+            => jsRuntime.InvokeVoidAsync("localStorage.removeItem", key);
     }
 }

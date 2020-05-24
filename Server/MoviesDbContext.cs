@@ -1,5 +1,6 @@
 ﻿using BlazorMovies.Client.Pages.People;
 using BlazorMovies.Shared.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BlazorMovies.Server
 {
-    public class MoviesDbContext : DbContext
+    public class MoviesDbContext : IdentityDbContext
     {
         public MoviesDbContext()
         {
@@ -29,7 +30,7 @@ namespace BlazorMovies.Server
         {
             modelBuilder.Entity<Actor>().HasKey(x => new { x.MovieId, x.PersonId });
             modelBuilder.Entity<MoviesGenre>().HasKey(x => new { x.MovieId, x.GenreId });
-            // base.OnModelCreating(modelbuilder);
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

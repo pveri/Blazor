@@ -12,6 +12,8 @@ using BlazorMovies.Client.Helpers;
 using Blazor.FileReader;
 using BlazorMovies.Client.Helpers.Services;
 using BlazorMovies.Client.Helpers.Repository;
+using Microsoft.AspNetCore.Components.Authorization;
+using BlazorMovies.Client.Auth;
 
 namespace BlazorMovies.Client
 {
@@ -36,6 +38,8 @@ namespace BlazorMovies.Client
             services.AddScoped<IGenreRepository, GenreRepository>();
             services.AddScoped<IPersonRepository, PersonRepository>();
             services.AddScoped<IMovieRepository, MovieRepository>();
+            services.AddAuthorizationCore();
+            services.AddScoped<AuthenticationStateProvider, TestAuthProvider>();
         }
     }
 }
