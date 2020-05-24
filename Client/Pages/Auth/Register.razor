@@ -1,0 +1,23 @@
+﻿@page "/register"
+@inject IAccountsRepository acctRepo
+@inject NavigationManager navMan
+@inject BlazorMovies.Client.Auth.ILoginService loginSvc
+
+<EditForm Model="userInfo" OnValidSubmit="CreateUser">
+    <div class="form-group">
+        <label>Email:</label><InputText class="form-control" @bind-Value="userInfo.Email"></InputText>
+        <label>Password:</label><PasswordInput class="form-control" @bind-Value="userInfo.Password"></PasswordInput>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</EditForm>
+
+@code {
+    private UserInfo userInfo = new UserInfo();
+
+    private async Task CreateUser()
+    {
+        var token = await acctRepo.Register(userInfo);
+        await loginSvc.Login(token.Token);
+        navMan.NavigateTo("");
+    }
+}
