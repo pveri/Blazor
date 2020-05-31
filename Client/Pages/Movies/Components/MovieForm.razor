@@ -39,12 +39,13 @@
                     <img style="width:50px;" src="@actor.Picture" />
                 </MyResultTemplate>
                 <MyListTemplate>
-                    @actor.Name / <input type="text" placeholder="Character" @bind="actor.Character"/>
+                    @actor.Name / <input type="text" placeholder="Character" @bind="actor.Character" />
                 </MyListTemplate>
             </MultiSelectTypeAhead>
         </div>
     </div>
 </EditForm>
+@*<Ratings MaxRating="10" OnVote="@((int i) => Console.WriteLine(i))"></Ratings>*@
 <ImageUpload Label="@("Picture")" ImgUrl="@ImgUrl" OnSelectedImage="ImageSelected"></ImageUpload>
 @code {
     [Parameter] public Movie movie { get; set; }
@@ -78,11 +79,11 @@
         Console.Write("genres: " + Newtonsoft.Json.JsonConvert.SerializeObject(movie.MoviesGenres));
         movie.Actors = SelectedActors.Select(x => new Actor { CharacterName = x.Character, PersonId = x.Id, MovieId = movie.Id }).ToList();
         //if (!isBusy)
-       // {
-            //isBusy = true;
+        // {
+        //isBusy = true;
         await OnValidSubmit.InvokeAsync(null);
-           // isBusy = false;
-      // }
+        // isBusy = false;
+        // }
     }
 
     protected void ImageSelected(string base64)

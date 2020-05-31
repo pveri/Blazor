@@ -36,11 +36,11 @@ namespace BlazorMovies.Server.Controllers
         [HttpPost("create")]
         public async Task<ActionResult<UserToken>> CreateUser ([FromBody] UserInfo userInfo)
         {
-            var user = new IdentityUser { UserName = userInfo.Email, Email = userInfo.Email };
-            var result = await _userManager.CreateAsync(user);
+            var user = new IdentityUser { UserName = userInfo.Email, Email = userInfo.Email,  };
+            var result = await _userManager.CreateAsync(user, userInfo.Password);
             if (result.Succeeded)
             {
-                return Ok(CreateToken(userInfo));
+                return Ok(await CreateToken(userInfo));
             }
             return BadRequest();
         }
@@ -51,11 +51,11 @@ namespace BlazorMovies.Server.Controllers
             var login = await _signinManager.PasswordSignInAsync(info.Email, info.Password, true, false);
             if (login.Succeeded)
             {
-                return Ok(CreateToken(info));
+                return Ok(await CreateToken(info));
             }
             return BadRequest();
         }
-        private UserToken CreateToken (UserInfo userInfo)
+        private async Task<UserToken> CreateToken (UserInfo userInfo)
         {
             var claims = new List<Claim>
             {
@@ -63,6 +63,8 @@ namespace BlazorMovies.Server.Controllers
                 new Claim(ClaimTypes.Name, userInfo.Email)
             };
 
+            var user = await _userManager.FindByNameAsync(userInfo.Email);
+            claims.AddRange(await _userManager.GetClaimsAsync(user));
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this._config["jwt:key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var expiry = DateTime.UtcNow.AddYears(1);

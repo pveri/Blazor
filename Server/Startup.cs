@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System;
+using BlazorMovies.Server.Managers;
 
 namespace BlazorMovies.Server
 {
@@ -36,6 +37,7 @@ namespace BlazorMovies.Server
             services.AddControllersWithViews();
             services.AddRazorPages();
             services.AddScoped<IFileStorageService, AzureStorageService>();
+            services.AddScoped<IMovieManager, MovieManager>();
             services.AddMvc().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             services.AddAutoMapper(typeof(Startup));
             services.AddIdentity<IdentityUser, IdentityRole>()

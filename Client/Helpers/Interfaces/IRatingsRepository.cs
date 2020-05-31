@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace BlazorMovies.Client.Helpers.Interfaces
 {
-    public interface IAccountsRepository
+    public interface IRatingsRepository
     {
-        Task<UserToken> Register(UserInfo userInfo);
-        Task<UserToken> Login(UserInfo userInfo);
+        Task PostRating(MovieRatings rating);
     }
 }

@@ -4,9 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using BlazorMovies.Server.Helpers;
+using BlazorMovies.Server.Managers;
 using BlazorMovies.Shared.DTO;
 using BlazorMovies.Shared.Entities;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
@@ -20,13 +22,17 @@ namespace BlazorMovies.Server.Controllers
         readonly MoviesDbContext dbContext;
         readonly IFileStorageService fileService;
         readonly IMapper mapper;
-
-        public MoviesController(MoviesDbContext db, IFileStorageService fileService, IMapper mapper)
+        readonly IMovieManager movieManager;
+        readonly UserManager<IdentityUser> _userMan;
+        public MoviesController(MoviesDbContext db, IFileStorageService fileService, IMapper mapper, IMovieManager movieManager, UserManager<IdentityUser> userManager)
         {
             this.dbContext = db;
             this.fileService = fileService;
             this.mapper = mapper;
+            this.movieManager = movieManager;
+            this._userMan = userManager;
         }
+
         [HttpPost]
         public async Task<ActionResult> Post(Movie movie)
         {
@@ -51,15 +57,8 @@ namespace BlazorMovies.Server.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<MovieDTO>> Get(int Id)
         {
-            var movie = await dbContext.Movies.Where(x => x.Id == Id)
-                .Include(x => x.MoviesGenres).ThenInclude(x => x.Genre)
-                .Include(x => x.Actors).ThenInclude(x => x.Person)
-                .FirstOrDefaultAsync();
-
-            var movieDto = new MovieDTO(movie);
-            movieDto.Actors = movie.Actors.Select(x => new PersonDTO(x.Person) { Character = x.CharacterName }).ToList();
-            movieDto.Genres = movie.MoviesGenres.Select(x => new GenreDTO(x.Genre)).ToList();
-            return movieDto;
+            var user = await _userMan.FindByEmailAsync(HttpContext.User.Identity.Name);
+            return await movieManager.GetMovieDetails(Id, user.Id);
         }
         
         [HttpGet("update/{id}")]

@@ -31,7 +31,8 @@ namespace BlazorMovies.Shared.DTO
         public string Poster { get; set; }
         public List<GenreDTO> Genres { get; set; }
         public List<PersonDTO> Actors { get; set; }
-
+        public double AverageRating { get; set; }
+        public int UserRating { get; set; }
         public Movie Movie()
         {
             // Helper method to do basic mapping, for now

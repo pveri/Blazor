@@ -26,5 +26,15 @@ namespace BlazorMovies.Client.Helpers.Repository
             }
             throw new Exception(await response.GetBody());
         }
+
+        public async Task<UserToken> Login(UserInfo userInfo)
+        {
+            var response = await httpService.Post<UserInfo, UserToken>($"{url}/login", userInfo);
+            if (response.Success)
+            {
+                return response.Response;
+            }
+            throw new Exception(await response.GetBody());
+        }
     }
 }

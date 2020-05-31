@@ -26,6 +26,7 @@ namespace BlazorMovies.Server
         public DbSet<Person> People { get; set; }
         public DbSet<Actor> Actors { get; set; }
         public DbSet<MoviesGenre> MovieGenres { get; set; }
+        public DbSet<MovieRatings> MovieRatings { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Actor>().HasKey(x => new { x.MovieId, x.PersonId });

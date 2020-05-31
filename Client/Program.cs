@@ -36,9 +36,11 @@ namespace BlazorMovies.Client
             services.AddFileReaderService(options => options.InitializeOnFirstCall = true);
             services.AddScoped<IHttpService, HttpService>();
             services.AddScoped<IGenreRepository, GenreRepository>();
+            services.AddScoped<IRatingsRepository, RatingsRepository>();
             services.AddScoped<IPersonRepository, PersonRepository>();
             services.AddScoped<IMovieRepository, MovieRepository>();
             services.AddScoped<IAccountsRepository, AccountsRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
             services.AddAuthorizationCore();
             services.AddScoped<JWTAuthProvider>();
             services.AddScoped<AuthenticationStateProvider, JWTAuthProvider>(

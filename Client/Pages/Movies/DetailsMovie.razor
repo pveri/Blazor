@@ -1,6 +1,7 @@
 ﻿@page "/movie/{MovieId:int}"
 @page "/movie/{MovieId:int}/{MovieName}"
 @inject IMovieRepository movieRepo
+@inject IRatingsRepository ratingRepo
 
 @if (model == null)
 {
@@ -9,6 +10,8 @@
 else
 {
     <h3>@model.Title (@model.ReleaseDate.Value.ToString("yyyy"))</h3>
+    <text>Rating: @model.AverageRating.ToString("0.#")</text>
+    <Ratings MaxRating="5" SelectedRating="model.UserRating" OnVote="OnVote"></Ratings>
     var count = model.Genres.Count();
     @count
     for (int i=0;i<count; i++)
@@ -48,5 +51,12 @@ else
         model = await movieRepo.GetMovieDTO(MovieId);
         //Console.WriteLine($"Movie Id is {MovieId}");
         base.OnInitialized();
+    }
+
+    protected async Task OnVote(int rating)
+    {
+        model.UserRating = rating;
+        var movieRating = new MovieRatings { MovieId = model.Id, Rate = rating }; // TODO: Switch to DTO
+        await ratingRepo.PostRating(movieRating);
     }
 }
