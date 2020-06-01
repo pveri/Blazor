@@ -17,7 +17,7 @@
     private async Task DoLogin()
     {
         var token = await acctRepo.Login(userInfo);
-        await loginSvc.Login(token.Token);
+        await loginSvc.Login(token);
         navMan.NavigateTo("");
     }
 }

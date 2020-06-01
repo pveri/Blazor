@@ -1,5 +1,5 @@
 ﻿@inherits LayoutComponentBase
-
+@inject TokenRefresh tokenRefresh
 <div class="sidebar">
     <NavMenu />
 </div>
@@ -14,3 +14,10 @@
             @Body
     </div>
 </div>
+@code {      
+
+    protected override void OnInitialized()
+    {
+        tokenRefresh.Initialize();
+    }
+}

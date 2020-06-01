@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper.Configuration;
 using BlazorMovies.Shared.Entities;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -67,7 +69,7 @@ namespace BlazorMovies.Server.Controllers
             claims.AddRange(await _userManager.GetClaimsAsync(user));
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this._config["jwt:key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var expiry = DateTime.UtcNow.AddYears(1);
+            var expiry = DateTime.UtcNow.AddMinutes(10);
             JwtSecurityToken token = new JwtSecurityToken(
                 issuer: null,
                 audience: null,
@@ -85,6 +87,14 @@ namespace BlazorMovies.Server.Controllers
         public IActionResult Index()
         {
             return View();
+        }
+
+        [HttpGet("RenewToken")]
+        // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<ActionResult<UserToken>> Renew()
+        {
+            var userInfo = new UserInfo { Email = HttpContext.User.Identity.Name };
+            return await CreateToken(userInfo);
         }
     }
 }

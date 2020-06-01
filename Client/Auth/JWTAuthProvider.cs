@@ -1,4 +1,5 @@
 ﻿using BlazorMovies.Client.Helpers;
+using BlazorMovies.Client.Helpers.Interfaces;
 using BlazorMovies.Shared.Entities;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
@@ -16,17 +17,56 @@ namespace BlazorMovies.Client.Auth
     public class JWTAuthProvider: AuthenticationStateProvider, ILoginService
     {
         private readonly IJSRuntime js;
+        private readonly IAccountsRepository userRepo;
         private AuthenticationState anonymous =>
             new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
         private readonly HttpClient client;
-        public JWTAuthProvider(IJSRuntime _js, HttpClient _client)
+        public JWTAuthProvider(IJSRuntime _js, HttpClient _client, IAccountsRepository userRepo)
         {
             this.js = _js;
             this.client = _client;
+            this.userRepo = userRepo;
+        }
+
+        public async Task TryRenew()
+        {
+            var expiry = await js.GetAsync<string>("expiry");
+
+            if (DateTime.TryParse(expiry, out var expiryDate))
+            {
+                if (isExpired(expiryDate))
+                {
+                    await Logout();
+                }
+
+                if (ShouldRenew(expiryDate))
+                {
+                    var token = await js.GetAsync<string>("token");
+                    token = await RenewToken(token);
+                    var authState = BuildAuthState(token);
+                    NotifyAuthenticationStateChanged(Task.FromResult(authState));
+                }
+            }
         }
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
             var token = await js.GetAsync<string>("token");
+            var expiry = await js.GetAsync<string>("expiry");
+
+            if  (DateTime.TryParse(expiry, out var expiryDate))
+            {
+                if (isExpired(expiryDate))
+                {
+                    await this.Cleanup();
+                    return anonymous;
+                }
+
+                if (ShouldRenew(expiryDate))
+                {
+                    token = await RenewToken(token);
+                }
+            }
+
             if (string.IsNullOrEmpty(token))
             {
                 return anonymous;
@@ -35,6 +75,24 @@ namespace BlazorMovies.Client.Auth
             return BuildAuthState(token);
         }
 
+        private async Task<string> RenewToken (string token)
+        {
+            this.client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue
+                ("bearer", token);
+            var newToken = await userRepo.RenewToken();
+            await js.SetAsync("token", newToken.Token);
+            await js.SetAsync("expiry", newToken.Expires.ToString());
+            return newToken.Token;
+        }
+        private bool ShouldRenew(DateTime expiryDate)
+        {
+            return expiryDate.Subtract(DateTime.UtcNow) < TimeSpan.FromMinutes(5);
+        }
+
+        private bool isExpired (DateTime date)
+        {
+            return date <= DateTime.UtcNow;
+        }
         public AuthenticationState BuildAuthState (string token)
         {
             this.client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue
@@ -84,21 +142,27 @@ namespace BlazorMovies.Client.Auth
             return Convert.FromBase64String(base64);
         }
 
-        public async Task Login(string userToken)
+        public async Task Login(UserToken userToken)
         {
-            await js.SetAsync("token", userToken);
+            await js.SetAsync("token", userToken.Token);
+            await js.SetAsync("expiry", userToken.Expires.ToString());
             // await js.SetAsync(EXPIRATION"token", userToken.Expiration.ToString());
-            var authState = BuildAuthState(userToken);
+            var authState = BuildAuthState(userToken.Token);
             NotifyAuthenticationStateChanged(Task.FromResult(authState));
         }
 
         public async Task Logout()
         {
-            await js.DeleteAsync("token");
-            client.DefaultRequestHeaders.Authorization = null;
+            await Cleanup();
             NotifyAuthenticationStateChanged(Task.FromResult(anonymous));
         }
 
+        private async Task Cleanup()
+        {
+            await js.DeleteAsync("token");
+            await js.DeleteAsync("expiry");
+            client.DefaultRequestHeaders.Authorization = null;
+        }
         //private async Task CleanUp()
         //{
         //    await js.DeleteAsync("token");

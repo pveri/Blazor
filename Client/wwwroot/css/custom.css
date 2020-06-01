@@ -182,6 +182,9 @@
     }
 }
 
+.checked {
+    color: orange;
+}
 @keyframes sk-scaleout {
     0% {
         -webkit-transform: scale(0);

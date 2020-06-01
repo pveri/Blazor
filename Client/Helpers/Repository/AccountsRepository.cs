@@ -36,5 +36,15 @@ namespace BlazorMovies.Client.Helpers.Repository
             }
             throw new Exception(await response.GetBody());
         }
+
+        public async Task<UserToken> RenewToken ()
+        {
+            var response = await httpService.Get<UserToken>($"{url}/RenewToken");
+            if (response.Success)
+            {
+                return response.Response;
+            }
+            throw new Exception(await response.GetBody());
+        }
     }
 }

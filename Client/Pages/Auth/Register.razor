@@ -17,7 +17,7 @@
     private async Task CreateUser()
     {
         var token = await acctRepo.Register(userInfo);
-        await loginSvc.Login(token.Token);
+        await loginSvc.Login(token);
         navMan.NavigateTo("");
     }
 }
