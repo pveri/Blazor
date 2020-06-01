@@ -19,7 +19,6 @@ namespace BlazorMovies.Client.Auth
 
         public void Initialize()
         {
-            Console.WriteLine("In timer init");
             timer.Interval = 60*1000;
             timer.Elapsed += Timer_Elapsed;
             timer.Start();
@@ -27,7 +26,6 @@ namespace BlazorMovies.Client.Auth
 
         private void Timer_Elapsed (object sender, ElapsedEventArgs e)
         {
-            Console.WriteLine("in timer");
             loginService.TryRenew();
         }
 
