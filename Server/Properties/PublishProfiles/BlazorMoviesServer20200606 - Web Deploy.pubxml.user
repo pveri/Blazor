@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+This file is used by the publish/package process of your Web project. You can customize the behavior of this process
+by editing this MSBuild file. In order to learn more about this please visit https://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAEv4F3vE/qU+X9HRq8YY2YAAAAAACAAAAAAAQZgAAAAEAACAAAADb4w40KbmRdBjdPGRTuvlblo+Oiec3MoMiD9qIMCJsCgAAAAAOgAAAAAIAACAAAACYW93WnMD02qNjGTTk3veBerG6VqIaUI5zFYdkHRk22YAAAACOs/xKsUE7qXM7J2CpoK+zuXoNdtuRJ9tU11GDejz6PYSlRb8axS2gYcn0kKLs5ZuCp3RHttf2TeRC6bBR57+Wcp7O0x3RlG6egCiz/YJgfJxgpFXssXPLOqm31aS6x/hdEfBah1iY48aUY9t8mGFcmDi5K3Az8uBnYsSDf1rLE0AAAAAmnn7rbC1RgOejdrO1h/6kgporxEwyZ+L8EUuaiM02EL67BGi//WbxIvXF6/2C1OxPCKmeVUKYxE7Mp35oJrOO</EncryptedPassword>
+  </PropertyGroup>
+  <ItemGroup>
+    <DestinationConnectionStrings Include="DefaultConnection">
+      <Value>Server=tcp:blazormovies.database.windows.net,1433%3bInitial Catalog=BlazorMovies.Server_db%3bPersist Security Info=False%3bUser ID=blazordbadmin%3bPassword=Blazor123!%3bMultipleActiveResultSets=False%3bEncrypt=True%3bTrustServerCertificate=False%3bConnection Timeout=30%3b</Value>
+    </DestinationConnectionStrings>
+  </ItemGroup>
+  <ItemGroup>
+    <EFMigrations Include="BlazorMovies.Server.MoviesDbContext">
+      <Value>Server=tcp:blazormovies.database.windows.net,1433%3bInitial Catalog=BlazorMovies.Server_db%3bPersist Security Info=False%3bUser ID=blazordbadmin%3bPassword=Blazor123!%3bMultipleActiveResultSets=False%3bEncrypt=True%3bTrustServerCertificate=False%3bConnection Timeout=30%3b</Value>
+    </EFMigrations>
+  </ItemGroup>
+</Project>
