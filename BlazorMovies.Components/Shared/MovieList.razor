@@ -1,0 +1,50 @@
+﻿@inject IJSRuntime js
+@inject IMovieRepository movieRepo
+<h3>MovieList</h3>
+<input type="checkbox" @bind="displayButtons" />
+
+<div class="movies-container">
+    <GenericList List="Movies">
+        <NullTemplate>
+            <text>Loading...</text>
+            <img src="https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/200.gif" />
+        </NullTemplate>
+        <EmptyTemplate>
+            @EmptyTemplate
+        </EmptyTemplate>
+        <ElementTemplate>
+            <SingleMovie movie="context"
+                         DeleteMovie="DeleteMovie"></SingleMovie>
+        </ElementTemplate>
+    </GenericList>
+</div>
+
+
+
+@code{
+    [Parameter] public List<Movie> Movies { get; set; }
+    [Parameter] public RenderFragment NullTemplate { get; set; }
+    [Parameter] public RenderFragment EmptyTemplate { get; set; }
+    Movie currentMovie;
+
+    bool displayButtons = false;
+
+    private async Task DeleteMovie(Movie movie)
+    {
+        // await js.InvokeAsync<bool>("confirm", $"Are you sure you want to delete{movie.Title}?");
+        currentMovie = movie;
+        // await js.MyFunction();
+        if (await js.Confirm($"Are you sure you want to delete {movie.Title}?"))
+            await movieRepo.DeleteMovie(currentMovie.Id);
+
+        Movies = await movieRepo.GetMovies();
+        //Movies.Remove(movie);
+    }
+
+
+    void OnCancel()
+    {
+        currentMovie = null;
+    }
+
+}

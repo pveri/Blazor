@@ -1,0 +1,27 @@
+﻿@page "/genres/edit/{GenreId:int}"
+@inject IGenreRepository genreRepo
+<h3>GenreEdit</h3>
+
+@if (Genre != null)
+{
+    <GenreForm Genre="Genre" OnValidSubmit="SaveGenre"></GenreForm>
+}
+else
+{
+    <text>Loading...</text>
+}
+
+@code {
+    [Parameter] public int GenreId { get; set; }
+    public Genre Genre { get; set; }
+    protected async override Task OnInitializedAsync()
+    {
+        Genre = await genreRepo.GetGenre(GenreId);
+        base.OnInitialized();
+    }
+
+    protected async Task SaveGenre()
+    {
+        await genreRepo.UpdateGenre(Genre);
+    }
+}

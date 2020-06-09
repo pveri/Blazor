@@ -1,7 +1,7 @@
 ﻿using BlazorMovies.Client.Helpers.Interfaces;
-using BlazorMovies.Client.Pages.People;
 using BlazorMovies.Shared.DTO;
 using BlazorMovies.Shared.Entities;
+using BlazorMovies.Shared.IRepositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;

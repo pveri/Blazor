@@ -14,6 +14,7 @@ using BlazorMovies.Client.Helpers.Services;
 using BlazorMovies.Client.Helpers.Repository;
 using Microsoft.AspNetCore.Components.Authorization;
 using BlazorMovies.Client.Auth;
+using BlazorMovies.Shared.IRepositories;
 
 namespace BlazorMovies.Client
 {
@@ -32,7 +33,7 @@ namespace BlazorMovies.Client
         private static void ConfigureServices(IServiceCollection services)
         {
             services.AddOptions();
-            services.AddTransient<IRepository, RepositoryInMemory>();
+            // services.AddTransient<IRepository, RepositoryInMemory>();
             services.AddFileReaderService(options => options.InitializeOnFirstCall = true);
             services.AddScoped<IHttpService, HttpService>();
             services.AddScoped<IGenreRepository, GenreRepository>();

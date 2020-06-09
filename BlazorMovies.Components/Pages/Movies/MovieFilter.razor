@@ -1,0 +1,130 @@
+﻿@page "/movies/filter"
+@inject IMovieRepository repository
+@inject IGenreRepository genreRepo
+@inject NavigationManager navMan
+<h3>MovieFilter</h3> 
+<EditForm Model="this.MovieFilterDTO">
+    <div class="form-inline">
+        <div class="form-group mb-2">
+            <label for="Title" class="sr-only">Title</label>
+            <input type="text" class="form-control" id="title" placeholder="Movie Title" @bind-value="MovieFilterDTO.Title"  @bind-value:event="oninput"
+                   @onkeypress="@(async (KeyboardEventArgs e) => await TitleKeyPress(e))" />
+
+        </div>
+        <div class="form-group mx-sm-3 mb-2">
+            <select class="form-control" @bind="MovieFilterDTO.GenreId">
+                <option value="0"> --Select Genre</option>
+                @foreach (var g in genres)
+                {
+                    <option value="@g.Id">@g.Name</option>
+                }
+            </select>
+        </div>
+
+        <div class="form-group mx-sm-3 mb-2">
+            <input type="checkbox" class="form-check-input" id="upcomingRelease" @bind="MovieFilterDTO.UpComingRelease" />
+            <label class="form-check-input" for="upcomingRelease">Upcoming Releases</label>
+        </div>
+
+        <div class="form-group mx-sm-3 mb-2">
+            <input type="checkbox" class="form-check-input" id="intheatres" @bind="MovieFilterDTO.InTheatres" />
+            <label class="form-check-input" for="intheatres">In Theatres</label>
+        </div>
+        <button class="btn btn-primary mx-sm-3 mb-2" type="button" @onclick="SearchMovies">Search</button>
+        <button class="btn btn-danger mx-sm-3 mb-2" type="button" @onclick="Clear">Clear</button>
+    </div>
+</EditForm>
+
+<MovieList Movies="movies">
+    <EmptyTemplate>
+        No records to show...
+    </EmptyTemplate>
+</MovieList>
+<Pagination CurrentPage="this.MovieFilterDTO.Page" TotalPages="this.TotalPages" Radius="this.MovieFilterDTO.RecordPerPage" PageChanged="SelectedPage" ></Pagination>
+@code {
+    string title = "";
+    private MovieFilterDTO MovieFilterDTO = new MovieFilterDTO() { Page = 1, RecordPerPage = 1 };
+    private int TotalPages = 0;
+    private List<Movie> movies = new List<Movie>();
+
+    List<Genre> genres = new List<Genre>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var qs = navMan.ParseQueryString(navMan.Uri);
+        if (qs != null)
+        {
+            FormatDTOFromQueryString(qs);
+        }
+        await LoadMovies();
+        genres = await genreRepo.GetGenres();
+        // base.OnInitialized();
+    }
+
+    protected async Task SelectedPage (int page)
+    {
+        MovieFilterDTO.Page = page;
+        await LoadMovies();
+    }
+
+    private async Task TitleKeyPress(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await LoadMovies();
+        }
+    }
+
+    protected async Task LoadMovies()
+    {
+        var queryStr = ToQueryString();
+
+        if (!String.IsNullOrWhiteSpace(queryStr))
+        {
+            queryStr = $"?{queryStr}";
+            navMan.NavigateTo($"/movies/filter{queryStr}");
+        }
+        var response = await repository.Filter(this.MovieFilterDTO);
+        TotalPages = response.TotalPages;
+        movies = response.Response;
+    }
+
+    protected async Task SearchMovies()
+    {
+        Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(MovieFilterDTO));
+        await LoadMovies();
+        StateHasChanged();
+
+    }
+
+    protected async Task Clear()
+    {
+        MovieFilterDTO = new MovieFilterDTO() { Page = 1, RecordPerPage = 10 };
+        await LoadMovies();
+    }
+
+    private string ToQueryString ()
+    {
+        var queryDict = new Dictionary<string, string>();
+        queryDict["genreId"] = MovieFilterDTO.GenreId.ToString();
+        queryDict["inTheatres"] = MovieFilterDTO.InTheatres.ToString();
+        queryDict["upcomingRelease"] = MovieFilterDTO.UpComingRelease.ToString();
+        queryDict["title"] = MovieFilterDTO.Title ?? "";
+        queryDict["page"] = MovieFilterDTO.Page.ToString();
+
+        var defaultvals = new List<string>() { "false", "", "0" };
+        var result = string.Join("&", queryDict.Where(x => !defaultvals.Contains(x.Value.ToLower()))
+            .Select(q => $"{q.Key}={System.Web.HttpUtility.UrlEncode(q.Value)}").ToArray());
+
+        return result;
+    }
+
+    private void FormatDTOFromQueryString(Dictionary<string,string> qs)
+    {
+        if (qs.ContainsKey("genreId")) this.MovieFilterDTO.GenreId = int.Parse(qs["genreId"]);
+        if (qs.ContainsKey("page")) this.MovieFilterDTO.Page = int.Parse(qs["page"]);
+        if (qs.ContainsKey("inTheatres")) this.MovieFilterDTO.InTheatres = bool.Parse(qs["inTheatres"]);
+        if (qs.ContainsKey("upcomingRelease")) this.MovieFilterDTO.UpComingRelease = bool.Parse(qs["upcomingRelease"]);
+        if (qs.ContainsKey("title")) this.MovieFilterDTO.Title = qs["title"];
+    }
+}

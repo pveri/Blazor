@@ -1,5 +1,6 @@
 ﻿using BlazorMovies.Client.Helpers.Interfaces;
 using BlazorMovies.Shared.Entities;
+using BlazorMovies.Shared.IRepositories;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

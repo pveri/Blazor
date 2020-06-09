@@ -6,17 +6,68 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Helpers\Interfaces\**" />
+    <Compile Remove="Pages\Genres\**" />
+    <Compile Remove="Pages\Movies\**" />
+    <Compile Remove="Pages\People\**" />
+    <Compile Remove="Pages\Users\**" />
+    <Content Remove="Helpers\Interfaces\**" />
+    <Content Remove="Pages\Genres\**" />
+    <Content Remove="Pages\Movies\**" />
+    <Content Remove="Pages\People\**" />
+    <Content Remove="Pages\Users\**" />
+    <EmbeddedResource Remove="Helpers\Interfaces\**" />
+    <EmbeddedResource Remove="Pages\Genres\**" />
+    <EmbeddedResource Remove="Pages\Movies\**" />
+    <EmbeddedResource Remove="Pages\People\**" />
+    <EmbeddedResource Remove="Pages\Users\**" />
+    <None Remove="Helpers\Interfaces\**" />
+    <None Remove="Pages\Genres\**" />
+    <None Remove="Pages\Movies\**" />
+    <None Remove="Pages\People\**" />
+    <None Remove="Pages\Users\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Helpers\Repository.cs" />
+    <Compile Remove="Pages\Counter.razor.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Pages\Counter.razor" />
+    <Content Remove="Pages\FetchData.razor" />
+    <Content Remove="Pages\Index.razor" />
+    <Content Remove="Shared\Confirmation.razor" />
+    <Content Remove="Shared\GenericList.razor" />
+    <Content Remove="Shared\ImageUpload.razor" />
+    <Content Remove="Shared\InputMarkdown.razor" />
+    <Content Remove="Shared\LoginLinks.razor" />
+    <Content Remove="Shared\MainLayout.razor" />
+    <Content Remove="Shared\MovieList.razor" />
+    <Content Remove="Shared\MultiSelect.razor" />
+    <Content Remove="Shared\MultiSelectTypeAhead.razor" />
+    <Content Remove="Shared\NavMenu.razor" />
+    <Content Remove="Shared\Pagination.razor" />
+    <Content Remove="Shared\Ratings.razor" />
+    <Content Remove="Shared\RenderMarkdown.razor" />
+    <Content Remove="Shared\SingleMovie.razor" />
+    <Content Remove="Shared\SurveyPrompt.razor" />
+    <Content Remove="Shared\TypeAhead.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Markdig" Version="0.20.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="3.1.4" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="3.2.0-preview5.20216.8" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Build" Version="3.2.0-preview5.20216.8" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="3.2.0-preview5.20216.8" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="3.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Build" Version="3.2.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="3.2.0" PrivateAssets="all" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="System.Net.Http.Json" Version="3.2.0-preview5.20210.3" />
+    <PackageReference Include="System.Net.Http.Json" Version="3.2.0" />
     <PackageReference Include="Tewr.Blazor.FileReader" Version="1.5.0.20109" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BlazorMovies.Components\BlazorMovies.Components.csproj" />
     <ProjectReference Include="..\Shared\BlazorMovies.Shared.csproj" />
   </ItemGroup>
 

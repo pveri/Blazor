@@ -1,0 +1,98 @@
+﻿@inject IPersonRepository personRepo
+<EditForm Model="movie" OnValidSubmit="OnDataAnnotationsValidated">
+    <DataAnnotationsValidator />
+    <div class="form-group">
+        <label for="name">Name</label>
+        <div class="form-group">
+            <InputText class="form-control" @bind-Value="movie.Title"></InputText>
+            <ValidationMessage For="@(() => movie.Title)" />
+        </div>
+        <div class="form-group">
+            <label for="intheatres">In Theatres?</label>
+            <InputCheckbox class="form-control" @bind-Value="movie.InTheatres"></InputCheckbox>
+        </div>
+        <div class="form-group">
+            <InputText class="form-control" @bind-Value="movie.Trailer"></InputText>
+            <ValidationMessage For="@(() => movie.Trailer)" />
+        </div>
+
+        <div class="form-group">
+            <InputDate class="form-control" @bind-Value="movie.ReleaseDate"></InputDate>
+            <ValidationMessage For="@(() => movie.ReleaseDate)" />
+        </div>
+
+        <div class="form-markdown">
+            <InputMarkdown @bind-Value="movie.Summary" For="@(()=> movie.Summary)" Label="@("Summary")" />
+        </div>
+        <button class="btn btn-primary" type="submit">Submit</button>
+
+        <div>
+            <MultiSelect Selected="selected" UnSelected="unselected"></MultiSelect>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Actors:</label>
+        <div>
+            <MultiSelectTypeAhead SearchMethod="SearchMethod" SelectedElements="SelectedActors" Context="actor">
+                <MyResultTemplate>
+                    <img style="width:50px;" src="@actor.Picture" />
+                </MyResultTemplate>
+                <MyListTemplate>
+                    @actor.Name / <input type="text" placeholder="Character" @bind="actor.Character" />
+                </MyListTemplate>
+            </MultiSelectTypeAhead>
+        </div>
+    </div>
+</EditForm>
+@*<Ratings MaxRating="10" OnVote="@((int i) => Console.WriteLine(i))"></Ratings>*@
+<ImageUpload Label="@("Picture")" ImgUrl="@ImgUrl" OnSelectedImage="ImageSelected"></ImageUpload>
+@code {
+    [Parameter] public Movie movie { get; set; }
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+    [Parameter] public List<Genre> Selected { get; set; }
+    [Parameter] public List<Genre> Unselected { get; set; }
+    [Parameter] public List<Person> SelectedActors { get; set; } = new List<Person>();
+
+
+    private List<MultiSelectModel> selected = new List<MultiSelectModel>();
+    private List<MultiSelectModel> unselected = new List<MultiSelectModel>();
+    private bool isBusy = false;
+    string ImgUrl;
+
+    protected override void OnInitialized()
+    {
+        selected = Selected.Select(x => new MultiSelectModel(x.Id.ToString(), x.Name)).ToList();
+        unselected = Unselected.Select(x => new MultiSelectModel(x.Id.ToString(), x.Name)).ToList();
+
+        if (!string.IsNullOrEmpty(movie.Poster))
+        {
+            ImgUrl = movie.Poster;
+            movie.Poster = null;
+        }
+        base.OnInitialized();
+    }
+
+    private async void OnDataAnnotationsValidated()
+    {
+        movie.MoviesGenres = selected.Select(x => new MoviesGenre { GenreId = int.Parse(x.Key), MovieId = movie.Id }).ToList();
+        Console.Write("genres: " + Newtonsoft.Json.JsonConvert.SerializeObject(movie.MoviesGenres));
+        movie.Actors = SelectedActors.Select(x => new Actor { CharacterName = x.Character, PersonId = x.Id, MovieId = movie.Id }).ToList();
+        //if (!isBusy)
+        // {
+        //isBusy = true;
+        await OnValidSubmit.InvokeAsync(null);
+        // isBusy = false;
+        // }
+    }
+
+    protected void ImageSelected(string base64)
+    {
+        movie.Poster = base64;
+    }
+
+    private async Task<IEnumerable<Person>> SearchMethod(string SearchTxt)
+    {
+        return await personRepo.GetPeopleByName(SearchTxt);
+    }
+}

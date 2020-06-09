@@ -1,0 +1,62 @@
+﻿@page "/movie/{MovieId:int}"
+@page "/movie/{MovieId:int}/{MovieName}"
+@inject IMovieRepository movieRepo
+@inject IRatingsRepository ratingRepo
+
+@if (model == null)
+{
+    <text>Loading...</text>
+}
+else
+{
+    <h3>@model.Title (@model.ReleaseDate.Value.ToString("yyyy"))</h3>
+    <text>Rating: @model.AverageRating.ToString("0.#")</text>
+    <Ratings MaxRating="5" SelectedRating="model.UserRating" OnVote="OnVote"></Ratings>
+    var count = model.Genres.Count();
+    @count
+    for (int i=0;i<count; i++)
+    {
+        
+       @linkGenres(model.Genres[i]);
+        
+    }
+    <div style="display:flex;">
+        <span style="display:inline-block; margin-right:5px;"><img src="@model.Poster" /></span>
+    </div>
+    <div style="margin-top:10px;">
+        <h3>Summary</h3>
+        <RenderMarkdown MarkdownContent="@model.Summary"></RenderMarkdown>
+    </div>
+    <div style="margin-top:3px;">
+        @foreach (var actor in model.Actors)
+        {
+            <div style="margin-bottom:2px;">
+                <img style="width:50px;" src="@actor.Picture" />
+                <span style="display:inline-block; width:200px;"><a href="/person/@actor.Id/@actor.Name.Replace(" ","-")">@actor.Name</a></span>
+                <span style="display:inline-block">@actor.Character</span>
+            </div>
+        }
+    </div>
+}
+
+
+@code {
+    [Parameter] public int MovieId { get; set; }
+    [Parameter] public string MovieName { get; set; }
+    private RenderFragment<GenreDTO> linkGenres = (genre) => @<a href="movies/search?genreId=@genre.Id">@genre.Name</a>;
+    MovieDTO model;
+
+    protected async override Task OnInitializedAsync()
+    {
+        model = await movieRepo.GetMovieDTO(MovieId);
+        //Console.WriteLine($"Movie Id is {MovieId}");
+        base.OnInitialized();
+    }
+
+    protected async Task OnVote(int rating)
+    {
+        model.UserRating = rating;
+        var movieRating = new MovieRatings { MovieId = model.Id, Rate = rating }; // TODO: Switch to DTO
+        await ratingRepo.PostRating(movieRating);
+    }
+}

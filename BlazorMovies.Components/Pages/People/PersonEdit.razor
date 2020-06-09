@@ -1,0 +1,24 @@
+﻿@page "/people/edit/{PersonId:int}"
+@inject IPersonRepository personRepo
+<h3>PersonEdit</h3>
+@if (person != null)
+{
+<PersonForm Person="person" OnValidSubmit="Save"></PersonForm>
+}
+
+@code {
+    [Parameter] public int PersonId { get; set; }
+
+    Person person;
+    protected override async Task OnInitializedAsync()
+    {
+        person = await personRepo.GetPerson(PersonId);
+        base.OnInitialized();
+    }
+
+    protected async Task Save()
+    {
+        //TODO add redirect
+        await personRepo.UpdatePerson(person);
+    }
+}

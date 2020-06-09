@@ -1,6 +1,7 @@
 ﻿using BlazorMovies.Client.Helpers;
 using BlazorMovies.Client.Helpers.Interfaces;
 using BlazorMovies.Shared.Entities;
+using BlazorMovies.Shared.IRepositories;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
 using System;

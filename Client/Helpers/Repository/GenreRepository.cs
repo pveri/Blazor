@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BlazorMovies.Client.Helpers.Interfaces;
 using BlazorMovies.Shared.Entities;
+using BlazorMovies.Shared.IRepositories;
 
 namespace BlazorMovies.Client.Helpers.Repository
 {

@@ -1,0 +1,36 @@
+﻿@page "/people/create"
+@inject IPersonRepository personRepo
+
+<h3>PersonCreate</h3>
+
+<PersonForm Person="person" OnValidSubmit="Create"></PersonForm>
+
+@code {
+    private bool isBusySaving = false;
+    Person person = new Person();
+    string ImgUrl = null;
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+    protected async void Create()
+    {
+        if (!isBusySaving)
+        {
+            isBusySaving = true;
+            try
+            {
+                await personRepo.CreatePerson(person);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            finally
+            {
+                isBusySaving = false;
+            }
+        }
+        Console.WriteLine("Creating Person");
+    }
+}

@@ -1,0 +1,57 @@
+﻿@page "/people"
+@inject IPersonRepository personRepo
+<h3>People</h3>
+<Pagination CurrentPage="pgdto.CurrentPage" Radius="1" PageChanged="ChangePage" TotalPages="totalPages"></Pagination>
+<GenericList List="people">
+    <WholeListTemplate>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var person in people)
+                {
+                    <tr>
+                        <td>
+                            <a class="btn btn-success" href="/people/edit/@person.Id">Edit</a>
+                            <button class="btn btn-danger" @onclick ="@(() =>Delete(person.Id))">Delete</button>
+                        </td>
+                        <td>@person.Name</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </WholeListTemplate>
+</GenericList>
+<a class="btn btn-info" href="/people/create">Add New</a>
+@code {
+        List<Person> people { get; set; }
+        PaginationDTO pgdto = new PaginationDTO() {CurrentPage=1, Records = 1};
+        int totalPages;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadPeople();
+    }
+
+    protected async Task ChangePage(int page)
+    {
+        pgdto.CurrentPage = page;
+        await LoadPeople();
+    }
+
+    private async Task LoadPeople()
+    {
+        var resp = await personRepo.GetPeople(pgdto);
+        totalPages = resp.TotalPages;
+        people = resp.Response;
+    }
+    protected async Task Delete (int Id)
+    {
+        await personRepo.DeletePerson(Id);
+        await LoadPeople();
+    }
+}

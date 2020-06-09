@@ -1,0 +1,57 @@
+﻿@page "/users"
+@inject IUserRepository userRepo
+
+<Pagination CurrentPage="paginationDTO.CurrentPage" PageChanged="PageChanged" TotalPages="totalPages" Radius="1"></Pagination>
+<GenericList List="Users">
+    <WholeListTemplate>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+
+                    </th>
+                    <th>
+                        Users
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var u in Users)
+                {
+                    <tr>
+                        <td>
+                            <a href="/users/edit/@u.UserId" class="btn btn-success">Edit</a>
+                        </td>
+                        <td>
+                            @u.Email
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </WholeListTemplate>
+
+</GenericList>
+@code {      
+    public List<UserDTO> Users;
+    public PaginationDTO paginationDTO = new PaginationDTO();
+    public int totalPages = 0;
+
+    protected async Task PageChanged(int idx)
+    {
+        paginationDTO.CurrentPage = idx;
+        await LoadUsers();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadUsers();
+    }
+
+    private async Task LoadUsers()
+    {
+        var paginatedResponse = await userRepo.GetUsers(paginationDTO);
+        Users = paginatedResponse.Response;
+        totalPages = paginatedResponse.TotalPages;
+    }
+}

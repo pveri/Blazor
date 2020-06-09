@@ -1,0 +1,25 @@
+﻿@inherits LayoutComponentBase
+@*@inject TokenRefresh tokenRefresh *@
+<div class="sidebar">
+    <NavMenu />
+</div>
+
+<div class="main">
+    <div class="top-row px-4">
+       <LoginLinks></LoginLinks>
+        <a href="http://blazor.net" target="_blank" class="ml-md-auto">About</a>
+    </div>
+
+    <div class="content px-4">
+            @Body
+    </div>
+</div>
+@code {      
+
+    protected override void OnInitialized()
+    {
+        // tokenRefresh.Initialize();
+        // System.Threading.Thread thread = new System.Threading.Thread(() => { Console.WriteLine("test from thread"); });
+        // thread.Start();
+    }
+}

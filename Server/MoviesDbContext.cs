@@ -1,5 +1,4 @@
-﻿using BlazorMovies.Client.Pages.People;
-using BlazorMovies.Shared.Entities;
+﻿using BlazorMovies.Shared.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
