@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using BlazorMovies.Library;
 using BlazorMovies.Server.Helpers;
 using BlazorMovies.Server.Managers;
 using BlazorMovies.Shared.DTO;

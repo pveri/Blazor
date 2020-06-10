@@ -1,4 +1,5 @@
-﻿using BlazorMovies.Shared.DTO;
+﻿using BlazorMovies.Library;
+using BlazorMovies.Shared.DTO;
 using BlazorMovies.Shared.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

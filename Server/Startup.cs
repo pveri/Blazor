@@ -16,6 +16,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System;
 using BlazorMovies.Server.Managers;
+using BlazorMovies.Library;
 
 namespace BlazorMovies.Server
 {

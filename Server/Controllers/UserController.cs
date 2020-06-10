@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using BlazorMovies.Library;
 using BlazorMovies.Server.Helpers;
 using BlazorMovies.Shared.DTO;
 using Microsoft.AspNetCore.Http;

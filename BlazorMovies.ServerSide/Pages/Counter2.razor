@@ -1,0 +1,44 @@
+﻿@page "/counter2"
+
+<h1>Counter</h1>
+
+<p>Current count: @currentCount</p>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
+<p>Current count: @asyncCount</p>
+
+<button class="btn btn-primary" @onclick="asyncIncrement">Click me</button>
+
+@code {
+    private int currentCount = 0;
+    private int asyncCount = 0;
+    private readonly object lockObj = new object();
+    private void IncrementCount()
+    {
+        System.Threading.Thread thread = new System.Threading.Thread(async () =>
+        {
+            while (currentCount < 1000)
+            {
+                lock (lockObj)
+                {
+                    currentCount++;
+                }
+               
+                await InvokeAsync(StateHasChanged); 
+                await Task.Delay(30);
+            }
+        });
+        thread.Start();
+    }
+
+    private async Task asyncIncrement()
+    {
+        while (asyncCount < 1000)
+        {
+            await Task.Delay(30);
+            asyncCount++;
+            StateHasChanged();
+        }
+    }
+}
